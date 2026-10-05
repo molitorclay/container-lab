@@ -1,7 +1,8 @@
 #!/bin/bash
 
 source /etc/profile
-/flag-writer.sh &
+/helper-B.sh &
+/helper-C.sh &
 source /tmux-launch.sh
 
 exec "$@"

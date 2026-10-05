@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # This bomb needs a network to survive!
 # It needs its own network namespace with a working interface.
-# If it shares the host's network it will explode.
+# If it can reach the host's network it will explode.
 # If it can't bind a privileged port it will explode.
 # If it can't reach the internet it will explode.
 
@@ -40,13 +40,12 @@ fi
 printf "✅ Interface %s has IP %s\n" "$IFACE" "$MY_IP"
 sleep 0.2
 
-# Check we are NOT on the host's network (host uses 172.x docker bridge)
-HOST_RANGE=$(echo "$MY_IP" | grep -cE '^172\.')
-if [ "$HOST_RANGE" -gt 0 ]; then
-    printf "❌ Using host network — set up a separate namespace\n"
+# Check we are NOT sharing the host's loopback
+if nc -zw1 127.0.0.1 1234 2>/dev/null; then
+    printf "❌ Can reach host network — set up a separate namespace\n"
     explode
 fi
-printf "✅ Not on host network\n"
+printf "✅ Isolated from host network\n"
 sleep 0.2
 
 # Check we can bind a privileged port

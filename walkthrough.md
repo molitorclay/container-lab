@@ -83,7 +83,9 @@ OR via ip netns exec:
 
 NAT (outbound internet access from namespace):
 ```sh
-sudo iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -j MASQUERADE
+sudo nft add table ip nat
+sudo nft add chain ip nat postrouting '{ type nat hook postrouting priority 100; }'
+sudo nft add rule ip nat postrouting ip saddr 10.0.0.0/24 masquerade
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 sudo ip netns exec bunker ip route add default via 10.0.0.1
 ```

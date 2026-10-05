@@ -9,9 +9,9 @@ RUN echo 'root:$6$gKoDlHAH5/mfa4N5$q/WZ0ws.E9Xcvw6.AS/EMvY2Fk3b7n2iNqXrK2PPFJBLk
     echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/unshare" >> /etc/sudoers && \
     echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/ip" >> /etc/sudoers && \
     echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/nsenter --net=*" >> /etc/sudoers && \
-    echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/iptables" >> /etc/sudoers
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/nft" >> /etc/sudoers
 
-RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat && \
+RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat nftables && \
     dnf clean all
 
 COPY --chown=$USER:$USER lab /home/$USER/lab
@@ -28,9 +28,10 @@ RUN echo "source /etc/lab-ps1.sh" >> /root/.bashrc && \
     echo "source /etc/lab-ps1.sh" >> /home/$USER/.bashrc
 
 COPY tmux-launch.sh /tmux-launch.sh
-COPY flag-writer.sh /flag-writer.sh
+COPY helper-B.sh /helper-B.sh
+COPY helper-C.sh /helper-C.sh
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /tmux-launch.sh /flag-writer.sh /entrypoint.sh
+RUN chmod +x /tmux-launch.sh /helper-B.sh /helper-C.sh /entrypoint.sh
 
 USER $USER
 WORKDIR /home/$USER
