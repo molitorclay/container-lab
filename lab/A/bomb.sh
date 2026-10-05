@@ -3,17 +3,17 @@
 # It's very shy — if it sees another process it will explode.
 # It's also homesick — if it's not on jerry-pc it will explode.
 
-tmux_label() {
-    tmux display-message -p '#W' 2>/dev/null | sed 's/[^[:alnum:]].*$//'
+TMUX_LABEL="A"
+
+tmux_rename() {
+    printf '\033k%s\033\\' "$1"
 }
 
 explode() {
     printf "💥 BOOM!!! 💥\n"
-    if [ -n "$TMUX" ]; then
-        LABEL=$(tmux_label)
-        tmux rename-window "${LABEL}💥"
-        (sleep 5; tmux rename-window "${LABEL}🔴") &
-    fi
+    LABEL=$TMUX_LABEL
+    tmux_rename "${LABEL}💥"
+    (sleep 5; tmux_rename "${LABEL}🔴") &
     exit 1
 }
 
@@ -33,6 +33,4 @@ printf "✅ Number of processes: %d\n" "$PIDCOUNT"
 sleep 0.2
 
 printf "🎉 You defused the bomb!!!\n"
-if [ -n "$TMUX" ]; then
-    tmux rename-window "$(tmux_label)🟢"
-fi
+tmux_rename "$TMUX_LABEL🟢"
