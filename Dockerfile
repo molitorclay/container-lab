@@ -2,10 +2,16 @@ FROM quay.io/podman/stable:v5.8.7
 
 ENV USER=jerry
 
-RUN useradd -m $USER && \
-    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/unshare" >> /etc/sudoers
+# WARNING: ip and nsenter are GTFOBins — sudo access is intentional for lab use only
+RUN echo 'root:$6$gKoDlHAH5/mfa4N5$q/WZ0ws.E9Xcvw6.AS/EMvY2Fk3b7n2iNqXrK2PPFJBLk9xjPIhHH3js6.n2MqymMYTv2c2OFOWaz8lx5PLc10' | chpasswd -e && \
+    useradd -m $USER && \
+    passwd -d $USER && \
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/unshare" >> /etc/sudoers && \
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/ip" >> /etc/sudoers && \
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/nsenter --net=*" >> /etc/sudoers && \
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/iptables" >> /etc/sudoers
 
-RUN dnf install -y tmux procps-ng hostname iputils iproute which && \
+RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat && \
     dnf clean all
 
 COPY --chown=$USER:$USER lab /home/$USER/lab

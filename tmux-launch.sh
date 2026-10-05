@@ -23,7 +23,7 @@ for lab in "$LABS_DIR"/*/; do
     tmux set-window-option -t "lab:$wname" @color "color$color"
     tmux set-window-option -t "lab:$wname" window-status-style "bg=color$color,fg=color232"
     tmux set-window-option -t "lab:$wname" window-status-current-style "bg=color$color,fg=color232,bold"
-    tmux select-pane -t "lab:$wname.0"
+    tmux select-pane -t "lab:$wname.1"
 
     INDEX=$((INDEX + 1))
 done
