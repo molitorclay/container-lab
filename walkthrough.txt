@@ -1,0 +1,49 @@
+Gerneral:
+
+# chroot
+
+chroot the/new/root /bin/sh
+
+TARGET=/home/jerry/lab/Ch/alpine
+sudo unshare --mount --pid --fork bash -c "
+  mount -t proc  proc   $TARGET/proc
+  mount -t sysfs sysfs  $TARGET/sys
+  mount --bind   /dev   $TARGET/dev
+  chroot $TARGET /bin/ash -l
+"
+
+
+# pivot-root
+
+TARGET=the/new/root
+unshare --mount bash
+mount --bind $TARGET $TARGET
+mkdir -p $TARGET/.old_root
+pivot_root $TARGET $TARGET/.old_root
+exec /bin/sh
+
+TARGET=/home/jerry/lab/Ch/alpine
+sudo unshare --mount --pid --fork bash -c "
+  mount --make-rprivate /
+  mount --bind $TARGET $TARGET
+  mount -t proc  proc   $TARGET/proc
+  mount -t sysfs sysfs  $TARGET/sys
+  mount --bind   /dev   $TARGET/dev
+  mkdir -p $TARGET/.old_root
+  pivot_root $TARGET $TARGET/.old_root
+  exec /bin/ash -c '/bin/umount -l /.old_root; /bin/rmdir /.old_root; exec /bin/ash -l'
+"
+
+## Namespaces
+
+# proc
+
+# net
+
+
+## Solutions
+
+# A
+unshare --user --map-root-user --mount --pid --fork --uts bash -c "hostname jerry-pc && mount -t proc proc /proc && exec bash bomb.sh"
+
+sudo unshare --mount --pid --fork --uts bash -c "hostname jerry-pc && mount -t proc proc /proc && exec bash bomb.sh"
