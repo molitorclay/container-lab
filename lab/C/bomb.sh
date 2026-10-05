@@ -27,7 +27,7 @@ printf "✅ Loopback is up\n"
 sleep 0.2
 
 # Check a non-loopback interface exists with an IP
-IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -1)
+IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -1 | cut -d'@' -f1)
 if [ -z "$IFACE" ]; then
     printf "❌ No network interface found\n"
     explode

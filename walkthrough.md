@@ -57,28 +57,28 @@ sudo unshare --mount --pid --fork bash -c "
 
 Create namespace and veth pair:
 ```sh
-sudo ip netns add bunker
+sudo ip netns add my_namespace
 
-sudo ip link add veth_host type veth peer name veth_guest
-sudo ip link set veth_guest netns bunker
+sudo ip link add veth0 type veth peer name veth1
+sudo ip link set veth1 netns my_namespace
 
-sudo ip link set veth_host up
-sudo ip addr add 10.0.0.1/24 dev veth_host
+sudo ip link set veth0 up
+sudo ip addr add 10.0.0.1/24 dev veth0
 ```
 
 Enter and configure (nsenter):
 ```sh
-sudo nsenter --net=/var/run/netns/bunker bash
-ip link set veth_guest up
-ip addr add 10.0.0.2/24 dev veth_guest
+sudo nsenter --net=/var/run/netns/my_namespace bash
+ip link set veth1 up
+ip addr add 10.0.0.2/24 dev veth1
 ip link set lo up
 ```
 
 OR via ip netns exec:
 ```sh
-# sudo ip netns exec bunker ip link set veth_guest up
-# sudo ip netns exec bunker ip addr add 10.0.0.2/24 dev veth_guest
-# sudo ip netns exec bunker ip link set lo up
+# sudo ip netns exec my_namespace ip link set veth1 up
+# sudo ip netns exec my_namespace ip addr add 10.0.0.2/24 dev veth1
+# sudo ip netns exec my_namespace ip link set lo up
 ```
 
 NAT (outbound internet access from namespace):
@@ -87,5 +87,5 @@ sudo nft add table ip nat
 sudo nft add chain ip nat postrouting '{ type nat hook postrouting priority 100; }'
 sudo nft add rule ip nat postrouting ip saddr 10.0.0.0/24 masquerade
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
-sudo ip netns exec bunker ip route add default via 10.0.0.1
+sudo ip netns exec my_namespace ip route add default via 10.0.0.1
 ```
