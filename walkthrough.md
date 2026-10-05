@@ -4,6 +4,8 @@ Gerneral:
 
 chroot the/new/root /bin/sh
 
+unshare --user --map-root-user chroot . /bin/busybox sh -c 'export PATH=/bin; exec sh'
+
 TARGET=/home/jerry/lab/Ch/alpine
 sudo unshare --mount --pid --fork bash -c "
   mount -t proc  proc   $TARGET/proc
@@ -41,9 +43,3 @@ sudo unshare --mount --pid --fork bash -c "
 # net
 
 
-## Solutions
-
-# A
-unshare --user --map-root-user --mount --pid --fork --uts bash -c "hostname jerry-pc && mount -t proc proc /proc && exec bash bomb.sh"
-
-sudo unshare --mount --pid --fork --uts bash -c "hostname jerry-pc && mount -t proc proc /proc && exec bash bomb.sh"
