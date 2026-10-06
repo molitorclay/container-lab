@@ -3,7 +3,13 @@ FLAG_DIR=/home/jerry/lab
 
 while true; do
     T=$(date +%s)
-    printf '%s' "$(printf '%s%s' "$T" "flag_public"  | sha256sum | cut -d' ' -f1)" > "$FLAG_DIR/flag_public"
-    printf '%s' "$(printf '%s%s' "$T" "flag_private" | sha256sum | cut -d' ' -f1)" > "$FLAG_DIR/flag_private"
+    for name in flag_public flag_private; do
+        f="$FLAG_DIR/$name"
+        if [ ! -e "$f" ]; then
+            touch "$f"
+            chmod 644 "$f"
+        fi
+        printf '%s' "$(printf '%s%s' "$T" "$name" | sha256sum | cut -d' ' -f1)" > "$f"
+    done
     sleep 1
 done

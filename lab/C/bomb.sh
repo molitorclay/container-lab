@@ -18,7 +18,6 @@ explode() {
     exit 1
 }
 
-# Check loopback is up
 if ! ip link show lo 2>/dev/null | grep -qE 'state (UP|UNKNOWN)'; then
     printf "❌ Loopback is not up\n"
     explode
@@ -26,7 +25,6 @@ fi
 printf "✅ Loopback is up\n"
 sleep 0.2
 
-# Check a non-loopback interface exists with an IP
 IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -1 | cut -d'@' -f1)
 if [ -z "$IFACE" ]; then
     printf "❌ No network interface found\n"
@@ -40,7 +38,6 @@ fi
 printf "✅ Interface %s has IP %s\n" "$IFACE" "$MY_IP"
 sleep 0.2
 
-# Check we are NOT sharing the host's loopback
 if nc -zw1 127.0.0.1 1234 2>/dev/null; then
     printf "❌ Can reach host network — set up a separate namespace\n"
     explode
@@ -48,7 +45,6 @@ fi
 printf "✅ Isolated from host network\n"
 sleep 0.2
 
-# Check we can bind a privileged port
 nc -l -p 80 &
 NC_PID=$!
 sleep 0.2
@@ -60,7 +56,6 @@ kill $NC_PID 2>/dev/null
 printf "✅ Can bind privileged port\n"
 sleep 0.2
 
-# Check internet access
 if ! nc -zw2 8.8.8.8 53 2>/dev/null; then
     printf "❌ No internet access\n"
     explode

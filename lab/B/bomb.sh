@@ -13,9 +13,8 @@ tmux_rename() {
 
 explode() {
     printf "💥 BOOM!!! 💥\n"
-    LABEL=$TMUX_LABEL
-    tmux_rename "${LABEL}💥"
-    (sleep 5; tmux_rename "${LABEL}🔴") &
+    tmux_rename "${TMUX_LABEL}💥"
+    (sleep 5; tmux_rename "${TMUX_LABEL}🔴") &
     exit 1
 }
 

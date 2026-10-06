@@ -3,7 +3,7 @@
 ## chroot
 
 ```sh
-chroot the/new/root /bin/sh
+chroot /path/to/rootfs /bin/sh
 ```
 
 Unprivileged (busybox):
@@ -26,7 +26,7 @@ sudo unshare --mount --pid --fork bash -c "
 
 Minimal:
 ```sh
-TARGET=the/new/root
+TARGET=/path/to/rootfs
 unshare --mount bash
 mount --bind $TARGET $TARGET
 mkdir -p $TARGET/.old_root
@@ -51,7 +51,31 @@ sudo unshare --mount --pid --fork bash -c "
 
 ## Namespaces
 
-### proc
+### uts
+
+```sh
+sudo unshare --uts bash
+hostname new-hostname
+```
+
+### pid
+
+```sh
+sudo unshare --pid --fork bash -c "
+  mount -t proc proc /proc
+  exec bash
+"
+```
+
+### pid + uts + mount
+
+```sh
+sudo unshare --mount --pid --fork --uts bash -c "
+  hostname new-hostname
+  mount -t proc proc /proc
+  exec bash
+"
+```
 
 ### net
 
@@ -89,3 +113,23 @@ sudo nft add rule ip nat postrouting ip saddr 10.0.0.0/24 masquerade
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 sudo ip netns exec my_namespace ip route add default via 10.0.0.1
 ```
+
+## OCI images
+
+Build and save an image's layers to a local directory (OCI layout):
+```sh
+podman build -t my-image .
+podman save --format oci-dir -o ./oci-layers my-image
+```
+
+Layer tarballs land in `./oci-layers/blobs/sha256/`. Walk `index.json` → manifest → config to see the ordered layer list.
+
+Podman `--format` values: `oci-dir`, `oci-archive`, `docker-dir`, `docker-archive` (default).
+
+Docker:
+```sh
+docker build -t my-image .
+docker save my-image -o my-image.tar
+mkdir layers && tar -xf my-image.tar -C layers
+```
+Each layer lives at `layers/<sha256>/layer.tar`.
