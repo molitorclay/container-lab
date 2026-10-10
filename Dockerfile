@@ -1,5 +1,8 @@
 FROM quay.io/podman/stable:v5.8.7
 
+COPY depth /depth
+RUN echo $(($(cat /depth) + 1)) > /depth
+
 ENV USER=jerry
 
 # WARNING: ip and nsenter are GTFOBins — sudo access is intentional for lab use only

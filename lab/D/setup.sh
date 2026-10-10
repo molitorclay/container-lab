@@ -7,6 +7,7 @@ IMAGE=mylab
 OCI_DIR=./oci
 LAYERS=./layers
 
+cp /depth ~/depth
 podman build -t "$IMAGE" ~/
 
 rm -rf "$OCI_DIR" "$LAYERS"
