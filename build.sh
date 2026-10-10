@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if command -v podman >/dev/null 2>&1; then
-    RUNTIME=podman
-elif command -v docker >/dev/null 2>&1; then
+if command -v docker >/dev/null 2>&1; then
     RUNTIME=docker
+elif command -v podman >/dev/null 2>&1; then
+    RUNTIME=podman
 else
-    printf '❌ neither podman nor docker is installed\n' >&2
+    printf '❌ neither docker nor podman is installed\n' >&2
     exit 1
 fi
 

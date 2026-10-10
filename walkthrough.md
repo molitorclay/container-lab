@@ -133,3 +133,31 @@ docker save my-image -o my-image.tar
 mkdir layers && tar -xf my-image.tar -C layers
 ```
 Each layer lives at `layers/<sha256>/layer.tar`.
+
+## OverlayFS
+
+Mount a stack of layer dirs (left = top) as a read-only overlay. Rootless, with a user+mount namespace (kernel 5.11+) — `userxattr` switches overlayfs from `trusted.overlay.*` xattrs (root-only) to `user.overlay.*`:
+```sh
+unshare --map-root-user --mount sh -c '
+    mount -t overlay overlay -o lowerdir=4:3:2:1,userxattr mount-here
+    sh
+'
+```
+
+Or with sudo:
+```sh
+sudo mount -t overlay overlay -o lowerdir=4:3:2:1 mount-here
+```
+
+Writable overlay (adds `upperdir` + `workdir` on the same filesystem; add `userxattr` for rootless):
+```sh
+mount -t overlay overlay \
+    -o lowerdir=3:2:1,upperdir=./rw,workdir=./work,userxattr \
+    mount-here
+```
+
+Whiteout — hide a file from a lower layer by placing a char(0,0) device at the same path in an upper layer:
+```sh
+sudo mknod upper/file c 0 0
+```
+When the overlay is mounted, `file` disappears from the merged view.

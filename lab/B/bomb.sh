@@ -38,14 +38,14 @@ fi
 printf "✅ Can read /flag_public\n"
 sleep 0.2
 
-if ( : >> /flag_public ) 2>/dev/null; then
+if ( : >> /flag_public ); then
     printf "❌ /flag_public is writable\n"
     explode
 fi
 printf "✅ /flag_public is read-only\n"
 sleep 0.2
 
-if [ -n "$(find / -xdev -name flag_private 2>/dev/null)" ]; then
+if [ -n "$(find / -xdev -name flag_private)" ]; then
     printf "❌ flag_private is readable\n"
     explode
 fi

@@ -22,8 +22,8 @@ sudo ip netns exec ch_ns ip link set veth_g up
 sudo ip netns exec ch_ns ip addr add 195.176.1.1/24 dev veth_g
 sudo ip netns exec ch_ns ip route add default via 10.2.0.1
 
-sudo nft add table ip nat 2>/dev/null || true
-sudo nft add chain ip nat postrouting '{ type nat hook postrouting priority 100; }' 2>/dev/null || true
+sudo nft add table ip nat || true
+sudo nft add chain ip nat postrouting '{ type nat hook postrouting priority 100; }' || true
 sudo nft add rule ip nat postrouting ip saddr 10.2.0.0/24 masquerade
 
 # Enter network namespace, then create UTS/mount/PID namespaces and pivot_root into Alpine

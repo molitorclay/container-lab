@@ -18,7 +18,7 @@ explode() {
     exit 1
 }
 
-if ! ip link show lo 2>/dev/null | grep -qE 'state (UP|UNKNOWN)'; then
+if ! ip link show lo | grep -qE 'state (UP|UNKNOWN)'; then
     printf "❌ Loopback is not up\n"
     explode
 fi
@@ -30,7 +30,7 @@ if [ -z "$IFACE" ]; then
     printf "❌ No network interface found\n"
     explode
 fi
-MY_IP=$(ip -4 addr show dev "$IFACE" 2>/dev/null | grep -oE 'inet [0-9.]+' | awk '{print $2}')
+MY_IP=$(ip -4 addr show dev "$IFACE" | grep -oE 'inet [0-9.]+' | awk '{print $2}')
 if [ -z "$MY_IP" ]; then
     printf "❌ No IP assigned to %s\n" "$IFACE"
     explode
@@ -38,7 +38,7 @@ fi
 printf "✅ Interface %s has IP %s\n" "$IFACE" "$MY_IP"
 sleep 0.2
 
-if nc -zw1 127.0.0.1 1234 2>/dev/null; then
+if nc -zw1 127.0.0.1 1234; then
     printf "❌ Can reach host network — set up a separate namespace\n"
     explode
 fi
@@ -48,15 +48,15 @@ sleep 0.2
 nc -l -p 80 &
 NC_PID=$!
 sleep 0.2
-if ! kill -0 $NC_PID 2>/dev/null; then
+if ! kill -0 $NC_PID; then
     printf "❌ Cannot bind privileged port 80\n"
     explode
 fi
-kill $NC_PID 2>/dev/null
+kill $NC_PID
 printf "✅ Can bind privileged port\n"
 sleep 0.2
 
-if ! nc -zw2 8.8.8.8 53 2>/dev/null; then
+if ! nc -zw2 8.8.8.8 53; then
     printf "❌ No internet access\n"
     explode
 fi

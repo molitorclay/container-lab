@@ -29,7 +29,7 @@ fi
 printf "✅ Hostname is %s\n" "$(hostname)"
 sleep 0.2
 
-OS_ID=$(grep '^ID=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"')
+OS_ID=$(grep '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
 if [ "$OS_ID" != "alpine" ]; then
     printf "❌ OS is %s, I want Alpine!\n" "$OS_ID"
     explode
@@ -46,7 +46,7 @@ printf "✅ Timezone is %s\n" "$TZ_NAME"
 sleep 0.2
 
 IP=$(ip -4 addr show | grep -oE 'inet [0-9.]+' | awk '{print $2}' | grep -v '^127\.' | head -1)
-COUNTRY=$(printf '%s\r\n' "$IP" | nc -w3 whois.ripe.net 43 2>/dev/null | grep -i '^country:' | head -1 | awk '{print $2}')
+COUNTRY=$(printf '%s\r\n' "$IP" | nc -w3 whois.ripe.net 43 | grep -i '^country:' | head -1 | awk '{print $2}')
 if [ "$COUNTRY" != "CH" ]; then
     printf "❌ IP country is %s, I want CH!\n" "$COUNTRY"
     explode
