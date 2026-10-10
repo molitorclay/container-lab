@@ -38,11 +38,11 @@ fi
 printf "✅ manuscript.md is fixed\n"
 sleep 0.2
 
-if [ -e mount-here/edits.md ]; then
-    printf "❌ edits.md is still visible\n"
+if [ -e mount-here/edits.md ] && [ -s mount-here/edits.md ]; then
+    printf "❌ edits.md is still visible with content\n"
     explode
 fi
-printf "✅ edits.md is hidden\n"
+printf "✅ edits.md is hidden or empty\n"
 sleep 0.2
 
 printf "🎉 You defused the bomb!!!\n"

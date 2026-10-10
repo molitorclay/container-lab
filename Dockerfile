@@ -25,6 +25,13 @@ COPY --chown=$USER:$USER lab /home/$USER/lab
 RUN bash /home/$USER/lab/Ch/get_alpine.sh && \
     chown -R $USER:$USER /home/$USER/lab/Ch/alpine
 
+# Compile the lab D SUID helper (overlay whiteout trick, needs root privs)
+RUN dnf install -y gcc && \
+    gcc -O2 -o /home/$USER/lab/D/whiteout-touch /home/$USER/lab/D/whiteout-touch.c && \
+    chown root:root /home/$USER/lab/D/whiteout-touch && \
+    chmod u+s /home/$USER/lab/D/whiteout-touch && \
+    dnf remove -y gcc && dnf autoremove -y && dnf clean all
+
 COPY config/tmux.conf /etc/tmux.conf
 
 COPY config/ps1.sh /etc/lab-ps1.sh
