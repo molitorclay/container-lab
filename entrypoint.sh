@@ -8,7 +8,6 @@ else
 fi
 
 source /etc/profile
-sudo sysctl -w net.ipv4.ip_forward=1 >/dev/null
 base64 -d /Dockerfile.base64 > ~jerry/Dockerfile
 chown jerry:jerry ~jerry/Dockerfile
 /helper-B.sh &

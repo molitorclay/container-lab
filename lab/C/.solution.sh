@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+sudo sysctl -w net.ipv4.ip_forward=1 >/dev/null
+
 sudo ip netns add bunker
 
 sudo ip link add veth_host type veth peer name veth_guest

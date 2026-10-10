@@ -8,6 +8,8 @@ HOST_IP=10.0.0.1
 GUEST_IP=10.0.0.2
 SUBNET=10.0.0.0/24
 
+sudo sysctl -w net.ipv4.ip_forward=1 >/dev/null
+
 sudo ip netns add "$NS"
 sudo ip link add "$HOST_IF" type veth peer name "$GUEST_IF"
 sudo ip link set "$GUEST_IF" netns "$NS"
