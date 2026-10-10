@@ -1,6 +1,6 @@
 _lab_pwd() { local p="${PWD%/}"; p="${p:-/}"; echo "${p/#$HOME/\~}"; }
 if [ "$EUID" -eq 0 ]; then
-    _USER_FG='\[\e[38;5;52m\]'
+    _USER_FG='\[\e[38;5;196m\]'
 else
     _USER_FG='\[\e[38;5;232m\]'
 fi

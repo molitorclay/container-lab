@@ -17,7 +17,7 @@ RUN echo 'root:$6$gKoDlHAH5/mfa4N5$q/WZ0ws.E9Xcvw6.AS/EMvY2Fk3b7n2iNqXrK2PPFJBLk
     echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/mount, /usr/bin/umount" >> /etc/sudoers && \
     echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/sysctl" >> /etc/sudoers
 
-RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat nftables && \
+RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat nftables tree && \
     dnf clean all
 
 COPY --chown=$USER:$USER lab /home/$USER/lab
