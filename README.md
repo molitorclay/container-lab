@@ -46,4 +46,3 @@ Talk slides: [docs/slides.pdf](docs/slides.pdf)
 - `entrypoint.sh` launches tmux with the labs pre-arranged.
 - `helper-B.sh` writes fresh SHA256 hashes into `flag_public` / `flag_private` every second, so lab B can verify the student mounted the real file rather than copying stale content.
 - `helper-C.sh` listens on port 1234 so lab C's bomb can detect whether the student has actually isolated the network namespace from the host.
-- `lab/D/whiteout-touch` is a tiny SUID C binary that creates an overlayfs whiteout, since the kernel blocks direct `mknod c 0 0` from userspace on overlay filesystems.

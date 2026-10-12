@@ -156,8 +156,17 @@ mount -t overlay overlay \
     mount-here
 ```
 
-Whiteout — hide a file from a lower layer by placing a char(0,0) device at the same path in an upper layer:
+Whiteout — hide a file from a lower layer. Two options:
+
+Classic char(0,0) device (needs root):
 ```sh
 sudo mknod upper/file c 0 0
 ```
-When the overlay is mounted, `file` disappears from the merged view.
+
+xattr form (unprivileged, with `userxattr` on the overlay mount):
+```sh
+touch upper/file
+setfattr -n user.overlay.whiteout -v y upper/file
+```
+
+Either way, `file` disappears from the merged view once the overlay is mounted.

@@ -17,20 +17,13 @@ RUN echo 'root:$6$gKoDlHAH5/mfa4N5$q/WZ0ws.E9Xcvw6.AS/EMvY2Fk3b7n2iNqXrK2PPFJBLk
     echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/mount, /usr/bin/umount" >> /etc/sudoers && \
     echo "$USER ALL=(ALL) NOPASSWD: /usr/sbin/sysctl" >> /etc/sudoers
 
-RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat nftables tree && \
+RUN dnf install -y tmux procps-ng hostname iputils iproute which fish nmap-ncat nftables tree attr && \
     dnf clean all
 
 COPY --chown=$USER:$USER lab /home/$USER/lab
 
 RUN bash /home/$USER/lab/Ch/get_alpine.sh && \
     chown -R $USER:$USER /home/$USER/lab/Ch/alpine
-
-# Compile the lab D SUID helper (overlay whiteout trick, needs root privs)
-RUN dnf install -y gcc && \
-    gcc -O2 -o /home/$USER/lab/D/whiteout-touch /home/$USER/lab/D/whiteout-touch.c && \
-    chown root:root /home/$USER/lab/D/whiteout-touch && \
-    chmod u+s /home/$USER/lab/D/whiteout-touch && \
-    dnf remove -y gcc && dnf autoremove -y && dnf clean all
 
 COPY config/tmux.conf /etc/tmux.conf
 
