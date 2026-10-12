@@ -26,7 +26,7 @@ You land in a tmux session with one window per lab. `Ctrl+a n` to switch windows
 | **B** | Mount namespace + rootfs isolation | `chroot` or `pivot_root`, bind mounts | The difference between `chroot` and `pivot_root`, and why bind mounts matter for giving a container a filesystem view. |
 | **C** | Network namespace | `ip netns`, `veth`, `nftables` NAT | How a container gets a network: veth pairs, routing between namespaces, and NAT masquerade for outbound traffic. |
 | **Ch** | Combined challenge | all of the above + user, UTS, timezone | Composing namespaces into something that actually looks like a container, including user ID mapping and hostname isolation. |
-| **D** | OverlayFS and whiteouts | `mount -t overlay`, `mknod` char(0,0) | How container images stack as layers, what a whiteout is at the filesystem level, and why `rm` in a Dockerfile doesn't actually delete. |
+| **D** | OverlayFS and whiteouts | `mount -t overlay`, `user.overlay.whiteout` xattr | How container images stack as layers, what a whiteout is at the filesystem level, and why `rm` in a Dockerfile doesn't actually delete. |
 | **X** | OCI image layers | `podman save`, extract tarballs, mount as overlay | What's inside an OCI image on disk: unpacking layer tarballs and reconstructing the merged rootfs by hand. |
 
 Each lab directory has a `bomb.sh` (the challenge) and a `.solution.sh` (the answer, hidden don't read it unless you get stuck).

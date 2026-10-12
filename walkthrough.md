@@ -158,12 +158,12 @@ mount -t overlay overlay \
 
 Whiteout — hide a file from a lower layer. Two options:
 
-Classic char(0,0) device (needs root):
+Classic char(0,0) device (needs root; the kernel blocks `mknod c 0 0` inside most containers, so this won't work in this lab):
 ```sh
 sudo mknod upper/file c 0 0
 ```
 
-xattr form (unprivileged, with `userxattr` on the overlay mount):
+xattr form (unprivileged, with `userxattr` on the overlay mount — this is what works in a container):
 ```sh
 touch upper/file
 setfattr -n user.overlay.whiteout -v y upper/file
