@@ -23,7 +23,7 @@ fi
 printf "✅ Running on %s\n" "$(hostname)"
 sleep 0.2
 
-PIDCOUNT=$(ps a --no-headers | wc -l)
+PIDCOUNT=$(ps ax --no-headers | wc -l)
 if [ "$PIDCOUNT" -lt 1 ] || [ "$PIDCOUNT" -gt 5 ]; then
     printf "❌ Process count out of range: %d\n" "$PIDCOUNT"
     explode

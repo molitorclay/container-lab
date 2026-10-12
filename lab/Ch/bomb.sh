@@ -46,7 +46,7 @@ printf "✅ Timezone is %s\n" "$TZ_NAME"
 sleep 0.2
 
 IP=$(ip -4 addr show | grep -oE 'inet [0-9.]+' | awk '{print $2}' | grep -v '^127\.' | head -1)
-COUNTRY=$(printf '%s\r\n' "$IP" | nc -w3 whois.ripe.net 43 | grep -i '^country:' | head -1 | awk '{print $2}')
+COUNTRY=$({ printf '%s\r\n' "$IP"; sleep 3; } | nc -w5 whois.ripe.net 43 | grep -i '^country:' | head -1 | awk '{print $2}')
 if [ "$COUNTRY" != "CH" ]; then
     printf "❌ IP country is %s, I want CH!\n" "$COUNTRY"
     explode
